@@ -1,0 +1,74 @@
+<mat-card>
+  <mat-card-title>Filter Criteria</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="searchForm">
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Choose a brand</mat-label>
+          <input matInput type="text" placeholder="Choose a brand" formControlName="brand" [matAutocomplete]="brand">
+          <mat-autocomplete #brand="matAutocomplete">
+            <mat-option *ngFor="let item of filteredBrands$ | async" [value]="item.name">
+              {{ item.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Choose a security feature</mat-label>
+          <input matInput type="text" placeholder="Choose a security feature" formControlName="securityFeature" [matAutocomplete]="securityFeature">
+          <mat-autocomplete #securityFeature="matAutocomplete">
+            <mat-option *ngFor="let item of filteredSecurityFeatures$ | async" [value]="item.name">
+              {{ item.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Choose a comfort feature</mat-label>
+          <input matInput type="text" placeholder="Choose a comfort feature" formControlName="comfortFeature" [matAutocomplete]="comfortFeature">
+          <mat-autocomplete #comfortFeature="matAutocomplete">
+            <mat-option *ngFor="let item of filteredComfortFeatures$ | async" [value]="item.name">
+              {{ item.name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+
+<mat-card>
+  <mat-card-title>Cars</mat-card-title>
+  <mat-card-content>
+    <ng-container *ngIf="cars$ | async as list">
+      <table mat-table [dataSource]="list" class="mat-elevation-z8">
+        <!-- Column 1 -->
+        <ng-container matColumnDef="brand">
+          <th mat-header-cell *matHeaderCellDef>Brand</th>
+          <td mat-cell *matCellDef="let element"> {{ element.brand }} </td>
+        </ng-container>
+        <!-- Column 2 -->
+        <ng-container matColumnDef="model">
+          <th mat-header-cell *matHeaderCellDef>Model</th>
+          <td mat-cell *matCellDef="let element"> {{ element.model }} </td>
+        </ng-container>
+        <!-- Column 3 -->
+        <ng-container matColumnDef="comfortFeatures">
+          <th mat-header-cell *matHeaderCellDef>Comfort features</th>
+          <td mat-cell *matCellDef="let element"> {{ element.comfortFeatures.join(", ") }} </td>
+        </ng-container>
+        <!-- Column 4 -->
+        <ng-container matColumnDef="securityFeatures">
+          <th mat-header-cell *matHeaderCellDef>Security features</th>
+          <td mat-cell *matCellDef="let element"> {{ element.securityFeatures.join(", ") }} </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="['brand', 'model', 'comfortFeatures', 'securityFeatures']"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['brand', 'model', 'comfortFeatures', 'securityFeatures'];"></tr>
+      </table>
+    </ng-container>
+  </mat-card-content>
+</mat-card>
+
+

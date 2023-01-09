@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {Observable, combineLatest, tap, map} from 'rxjs';
+import {Observable, combineLatest, map, of} from 'rxjs';
 import { CryptoModel } from '../../models/crypto.model';
 import { CryptoService } from '../../services/crypto.service';
 
@@ -18,38 +18,25 @@ export class FormAutocompleteCryptoChipsComponent {
     symbol: new FormControl()
   });
 
-  // readonly chipsArray$: FormArray = new FormArray([
-  //   new FormControl(null),
-  // ]);
+  readonly chipsArray$: FormArray = new FormArray([
+    new FormControl(),
+  ]);
 
-  // chipsArray = this._formBuilder.array([]);
-
-
+  cryptoArray: string[] = [];
+  cryptoArrayObs = of(this.cryptoArray);
   readonly cryptoList$: Observable<CryptoModel[]> = combineLatest([
     this._cryptoService.getAll(),
     this.cryptoForm.valueChanges
   ]).pipe(
-      tap(console.log),
       map(([crypto, formSymbol] : [CryptoModel[], any]) => {
-        // this.chipsArray.push(formSymbol.symbol);
         return crypto.filter((el) => el.symbol.toLowerCase().includes(formSymbol.symbol.toLowerCase()))
       })
   );
 
-  // readonly cryptoList$: Observable<CryptoModel[]> = combineLatest([
-  //   this._cryptoService.getAll(),
-  //   this.cryptoFormValues$
-  // ]).pipe(
-  //   tap(console.log),
-  //   map(([crypto, formSymbol] : [CryptoModel[], any]) => {
-  //     crypto.filter((el) =>
-  //       // el.symbol.toLowerCase().includes(formSymbol ? formSymbol.toLowerCase() : '')
-  //       el.symbol.toLowerCase().includes(formSymbol.symbol ? formSymbol.symbol.toLowerCase() : '')
-  //     )
-  //   })
-  // );
-
-
   constructor(private _cryptoService: CryptoService, private _formBuilder: FormBuilder) {
+  }
+
+  selectItem(symbol: string) {
+    this.cryptoArray.push(symbol);
   }
 }

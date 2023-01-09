@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { filter, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable, combineLatest, shareReplay, startWith, tap } from 'rxjs';
 import { CarBrandModel } from '../../models/car-brand.model';
 import { SecurityFeatureModel } from '../../models/security-feature.model';
@@ -58,7 +58,7 @@ export class FormAutocompleteMultiCarsComponent {
 
   readonly filteredComfortFeatures$: Observable<ComfortFeatureModel[]> = combineLatest([
     this.searchFormValues$,
-    this._carService.getAllSecurityFeatures()
+    this._carService.getAllComfortFeatures()
   ]).pipe(
     map(([searchForm, comfortFeatures]) =>
       comfortFeatures.filter((feature) =>
@@ -122,8 +122,5 @@ export class FormAutocompleteMultiCarsComponent {
   )
 
   constructor(private _carService: CarService) {
-  }
-
-  onSearchFormSubmitted(searchForm: FormGroup): void {
   }
 }
